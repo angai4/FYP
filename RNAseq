@@ -1,1 +1,91 @@
+# Make a new directory for the RNAseq project 
+mkdir -p ~/FYP/raw_fastq/FastQC
+cd ~/FYP/raw_fastq
+
+# Create symbolic links to the compressed fastq files
+ln -s /media/newdrive/data/TREM2/KO_Mo_1_1.fastq.gz  
+ln -s /media/newdrive/data/TREM2/KO_Mo_1_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_2_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_2_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_3_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_3_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_4_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_4_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_5_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/KO_Mo_5_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_1_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_1_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_2_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_2_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_3_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_3_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_4_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_4_2.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_5_1.fastq.gz
+ln -s /media/newdrive/data/TREM2/WT_Mo_5_2.fastq.gz
+
+# Check links the have been successfully created
+ls -l
+
+###################################################
+#FastQC
+###################################################
+
+# Run fastqc on all fastq files, and output results to 
+fastqc *.fastq.gz --outdir=/media/newdrive/GCB2024/aaronngai/FYP/raw_fastq/FastQC
+
+###################################################
+#MultiQC
+###################################################
+
+# Run multiqc on a directory containing fastqc reports
+multiqc ~/media/newdrive/GCB2024/aaronngai/FYP/raw_fastq/FastQC -n multiqc_data
+
+# Download and view the html file
+
+###################################################
+#STAR
+###################################################
+
+# To test a loop to align all fastq files within a directory
+for i in *_1.fastq.gz; do
+echo STAR --genomeDir /media/newdrive/data/Reference_genomes/Human/UCSC/STAR_UCSC_no_annotations/ --runThreadN 12 --readFilesIn $i ${i%_1.fastq.gz}_2.fastq.gz --readFilesCommand zcat --outFileNamePrefix ${i%_1.fastq.gz} --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard --sjdbGTFfile /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf --sjdbOverhang 49
+done
+
+# To align all fastq files within a directory
+nohup sh -c 'for i in *_1.fastq.gz; do
+STAR --genomeDir /media/newdrive/data/Reference_genomes/Human/UCSC/STAR_UCSC_no_annotations/ --runThreadN 12 --readFilesIn $i ${i%_1.fastq.gz}_2.fastq.gz --readFilesCommand zcat --outFileNamePrefix ${i%_1.fastq.gz} --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard --sjdbGTFfile /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf --sjdbOverhang 49
+done' &
+
+# Move bams and related files to a new directory and create a multiqc summary 
+mkdir -p ~/FYP/coordinate_sorted_bams
+mv *.out* ~/FYP/coordinate_sorted_bams/
+cd ~/FYP/coordinate_sorted_bams
+multiqc ~/FYP/coordinate_sorted_bams -n STAR_multiqc
+
+# Download and view the html file
+
+
+###################################################
+#Samtoools
+###################################################
+
+###################################################
+#RSeQC
+###################################################
+
+###################################################
+#featurecounts
+###################################################
+
+
+
+
+
+
+
+
+
+
+
 
