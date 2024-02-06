@@ -71,17 +71,18 @@ multiqc ~/FYP/coordinate_sorted_bams -n STAR_multiqc
 ###################################################
 
 # view header only of bam file
-samtools view -H SampleNameAligned.sortedByCoord.out.bam
+samtools view -H KO_Mo_1Aligned.sortedByCoord.out.bam
 
 # view mapping section only of sam file
-samtools view SampleNameAligned.sortedByCoord.out.bam | less -S
+samtools view KO_Mo_1Aligned.sortedByCoord.out.bam | less -S
 
 # view header and mapping section of sam file
-samtools view -h SampleNameAligned.sortedByCoord.out.bam | less -S
+samtools view -h KO_Mo_1Aligned.sortedByCoord.out.bam | less -S
 
 # count number of alignments
-samtools view SampleNameAligned.sortedByCoord.out.bam | wc -l
-samtools view -c SampleNameAligned.sortedByCoord.out.bam #does the same thing as previous command
+for i in *Aligned.sortedByCoord.out.bam; do 
+samtools view -c $i
+done
 
 # index bam files
 # -@ specify number of threads to use
@@ -97,8 +98,6 @@ ls -lrt
 ###################################################
 
 # RSeQC for Human data
-# Make an rseqc directory
-mkdir ~/rseqc
 
 # make directory for infer exp
 mkdir -p ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment
