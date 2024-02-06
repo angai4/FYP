@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-# Define the directory you want to change to (make the directories first)
+# Define the directory you want to change to (make the directories first??)
 my $directory = "/media/newdrive/GCB2024/aaronngai/automation/raw_fastq";
 my $fastqc_output_dir = "/media/newdrive/GCB2024/aaronngai/automation/raw_fastq/FastQ\
 C";
