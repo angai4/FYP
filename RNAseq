@@ -70,9 +70,105 @@ multiqc ~/FYP/coordinate_sorted_bams -n STAR_multiqc
 #Samtoools
 ###################################################
 
+# view header only of bam file
+samtools view -H SampleNameAligned.sortedByCoord.out.bam
+
+# view mapping section only of sam file
+samtools view SampleNameAligned.sortedByCoord.out.bam | less -S
+
+# view header and mapping section of sam file
+samtools view -h SampleNameAligned.sortedByCoord.out.bam | less -S
+
+# count number of alignments
+samtools view SampleNameAligned.sortedByCoord.out.bam | wc -l
+samtools view -c SampleNameAligned.sortedByCoord.out.bam #does the same thing as previous command
+
+# index bam files
+# -@ specify number of threads to use
+for i in *Aligned.sortedByCoord.out.bam; do
+samtools index $i -@ 12
+done
+
+# Check what files produced
+ls -lrt
+
 ###################################################
 #RSeQC
 ###################################################
+
+# RSeQC for Human data
+# Make an rseqc directory
+mkdir ~/rseqc
+
+# make directory for infer exp
+mkdir -p ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment
+
+# Infer whether strand-specific RNA-seq data was performed: Only need to check this for one bam file
+for i in *Aligned.sortedByCoord.out.bam; do
+infer_experiment.py -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -i $i > ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment/${i%Aligned.sortedByCoord.out.bam}.infer_exp.txt
+done
+
+# make directory for bam stat
+
+mkdir -p ~/FYP/coordinate_sorted_bams/rseqc/bam_stat
+
+# Summarizing mapping statistics of a BAM or SAM file: bam_stat.py
+nohup sh -c 'for i in *Aligned.sortedByCoord.out.bam; do
+bam_stat.py -i $i > ~/FYP/coordinate_sorted_bams/rseqc/bam_stat/${i%Aligned.sortedByCoord.out.bam}.bamstats.txt
+done' &
+
+# make directory for read dist
+
+mkdir -p ~/FYP/coordinate_sorted_bams/rseqc/read_distribution
+
+# Calculate how mapped reads were distributed over genome feature (like CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions): read_distribution.py
+
+nohup sh -c 'for i in *Aligned.sortedByCoord.out.bam; do
+read_distribution.py -i $i -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 > ~/FYP/coordinate_sorted_bams/rseqc/read_distribution/${i%Aligned.sortedByCoord.out.bam}.read_dist.txt
+done' &
+
+
+# Calculate the RNA-seq reads coverage over gene body: geneBody_coverage.py
+# This one in particular takes a long time!
+
+# count number of alignments
+for i in *Aligned.sortedByCoord.out.bam; do
+samtools view -c $i
+done
+
+# subsample a proportion of the aligned reads, to end up with ~200,000
+for i in *Aligned.sortedByCoord.out.bam; do
+samtools view -s 0.00209 -o ${i%.bam}_subset.bam $i
+done
+
+# index subsampled bam files
+for i in *Aligned.sortedByCoord.out_subset.bam; do
+samtools index $i
+done
+
+# count number of alignments in subsampled bam files
+for i in *Aligned.sortedByCoord.out_subset.bam; do
+samtools view -c $i
+done
+
+# make directory for gene body coverage
+mkdir -p ~/FYP/coordinate_sorted_bams/rseqc/genebodycoverage
+
+nohup sh -c 'for i in *Aligned.sortedByCoord.out_subset.bam; do
+geneBody_coverage.py -i $i -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -o ~/FYP/coordinate_sorted_bams/rseqc/genebodycoverage/${i%Aligned.sortedByCoord.out_subset.bam}
+done' &
+
+
+# Run multiqc on the results
+
+cd ~/FYP/coordinate_sorted_bams/rseqc/genebodycoverage
+multiqc ~/FYP/coordinate_sorted_bams/rseqc/genebodycoverage -n rseqc_genebodycoverage_multiqc
+
+cd ~/FYP/coordinate_sorted_bams/rseqc/read_distribution
+multiqc ~/FYP/coordinate_sorted_bams/rseqc/read_distribution -n rseqc_readdistribution_multiqc
+
+cd ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment
+multiqc ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment -n rseqc_inferexperiment_multiqc
 
 ###################################################
 #featurecounts
