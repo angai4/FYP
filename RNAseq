@@ -173,14 +173,25 @@ multiqc ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment -n rseqc_inferexperi
 #featurecounts
 ###################################################
 
+cd ~/FYP/coordinate_sorted_bams/
+mkdir ~/FYP/name_sorted_bams
 
+# create name-sorted bam file
+# -n sort by name rather than coordinates
+# -@ specify number of threads to use
+# -o name of output file
 
+# test
+for i in *Aligned.sortedByCoord.out.bam; do
+echo samtools sort -n -@ 12 -o ~/FYP/name_sorted_bams/${i%Aligned.sortedByCoord.out.bam}_namesorted.bam $i
+done
 
+# execute
+for i in *Aligned.sortedByCoord.out.bam; do
+samtools sort -n -@ 12 -o ~/FYP/name_sorted_bams/${i%Aligned.sortedByCoord.out.bam}_namesorted.bam $i
+done
 
+cd ~/FYP/name_sorted_bams
 
-
-
-
-
-
-
+# for reverse-stranded libraries
+featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o featurecounts.txt *namesorted.bam 2> featurecounts.screen-output.log
