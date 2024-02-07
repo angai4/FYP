@@ -194,4 +194,4 @@ done
 cd ~/FYP/name_sorted_bams
 
 # for reverse-stranded libraries
-featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o featurecounts.txt *namesorted.bam 2> featurecounts.screen-output.log
+nohup sh -c 'featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o featurecounts.txt *namesorted.bam 2> featurecounts.screen-output.log' &
