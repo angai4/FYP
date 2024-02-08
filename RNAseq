@@ -175,6 +175,7 @@ multiqc ~/FYP/coordinate_sorted_bams/rseqc/infer_experiment -n rseqc_inferexperi
 
 cd ~/FYP/coordinate_sorted_bams/
 mkdir ~/FYP/name_sorted_bams
+mkdir ~/FYP/counts
 
 # create name-sorted bam file
 # -n sort by name rather than coordinates
@@ -194,4 +195,13 @@ done
 cd ~/FYP/name_sorted_bams
 
 # for reverse-stranded libraries
-nohup sh -c 'featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o featurecounts.txt *namesorted.bam 2> featurecounts.screen-output.log' &
+featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o ~/FYP/counts/featurecounts.txt *namesorted.bam 2> ~/FYP/counts/featurecounts.screen-output.log
+
+# change directory 
+cd ~/FYP/counts
+
+# view txt file
+less -S featurecounts.txt
+
+# multiqc
+multiqc ~/FYP/counts -n featurecounts_multiqc
