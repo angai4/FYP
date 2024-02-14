@@ -57,5 +57,5 @@ closedir($dh);
 
 # Run MultiQC on the cutadapt logs
 
-my $multiqc_cmd = "multiqc -o $dir -n cutadapt_multiqc;
+my $multiqc_cmd = "multiqc -o $dir -n cutadapt_multiqc";
 system($multiqc_cmd) == 0 or die "Failed to run MultiQC: $!";
