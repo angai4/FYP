@@ -24,3 +24,10 @@ foreach my $file (@fastq_files) {
 }
 
 print "FastQC analysis complete.\n";
+
+# Run MultiQC on the FastQC output
+
+my $multiqc_cmd = "multiqc -o $fastqc_output_dir $fastqc_output_dir";
+system($multiqc_cmd) == 0 or die "Failed to run MultiQC: $!";
+
+print "MultiQC report generated.\n";
