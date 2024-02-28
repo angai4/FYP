@@ -30,3 +30,6 @@ foreach my $file (@bamfiles) {
     system("samtools index $file -@ 12");
 }
 
+print "Successfully indexed bam files, they can be found in $bam_path\n";
+
+
