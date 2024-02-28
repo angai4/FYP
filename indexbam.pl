@@ -26,18 +26,7 @@ print "Successfully changed to directory: $bam_path\n";
 my @bamfiles = glob("*Aligned.sortedByCoord.out.bam");
 
 foreach my $file (@bamfiles) {
-    # Extracting the base name for the output file using substitution regular expression
-    (my $base = $file) =~ s/*Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
-
-    # Constructing the index command
-    # -@ specify number of threads to use
-
-    my $indexbam = "for i in *Aligned.sortedByCoord.out.bam; do
-samtools index $i -@ 12
-done"; 
-
-    # Execute the command
-    system($indexbam) == 0
-        or die "Failed to execute indexbam: $!";
+    # Execute samtools index command for each file
+    system("samtools index $file -@ 12");
 }
 
