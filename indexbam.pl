@@ -9,8 +9,18 @@ for i in *Aligned.sortedByCoord.out.bam; do
 samtools index $i -@ 12
 done
 
-# Specify the directory that contains bam files
-my bam_path = 
+# Check for the correct number of arguments
+if (@ARGV < 1) {
+    die "Usage: $0 <path_to_bam_dir>\n";
+}
+
+# Assign command-line arguments to variables
+my ($bam_path) = @ARGV;
+
+# Verify if bam path exists and is executable
+unless (-x $bam_path) {
+    die "Error: BAM executable path '$bam_path' is not valid or not executable.\n";
+}
 
 # Change to directory with the bam files
 
