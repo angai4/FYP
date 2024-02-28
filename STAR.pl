@@ -65,8 +65,3 @@ print "Successfully changed to directory: $output_path\n";
 my $multiqc_cmd = "multiqc $output_path -n STAR_multiqc";
 system($multiqc_cmd) == 0 or die "Failed to run MultiQC: $!";
 
-# Index the BAM files 
-
-# Get a list of BAM files
-my @bam_files = glob("*Aligned.sortedByCoord.out.bam");
-
