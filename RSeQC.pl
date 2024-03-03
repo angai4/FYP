@@ -36,7 +36,7 @@ foreach my $file (@files) {
 
     # Constructing the inferexp command
 
-    my $inferexp = "infer_experiment.py -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -file ${base}.inferexp.txt > $inferexp";
+    my $inferexp = "infer_experiment.py -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -i $file > $inferexp_dir/${base}.inferexp.txt";
 
     # Execute the command
     system($inferexp) == 0
