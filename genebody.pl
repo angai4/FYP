@@ -11,10 +11,28 @@ print "Successfully changed to directory: $bam_path\n";
 # Getting all the files matching the pattern *Aligned.sortedByCoord.out.bam
 my @files = glob("*Aligned.sortedByCoord.out.bam");
 
+my $total_count = 0;
+my $file_count = 0;
+
 foreach my $file (@files) {
     # Extracting the base name for the output file using substitution regular expression
     (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
+    
+    my $count = `samtools view -c $file`;
+    chomp $count;
+    print "Count for file $file is: $count\n";
 
-    # Run count number of alignments command 
-    system("samtools view -c $file");
+    if ($count =~ /^\d+$/) {
+        $total_count += int($count);
+        $file_count++;
+    } else {
+    print "Non-numeric count for file $file: $count\n";
+    }
+}
+
+if ($file_count > 0) {
+    my $average_count = $total_count / $file_count:
+    print "Average count of alignments: $average_count\n";
+} else {
+    print "No files processed, unable to calculate average.\n";
 }
