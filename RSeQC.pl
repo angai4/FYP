@@ -35,10 +35,31 @@ foreach my $file (@files) {
     (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
 
     # Constructing the inferexp command
-
     my $inferexp = "infer_experiment.py -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -i $file > $inferexp_dir/${base}.inferexp.txt";
 
     # Execute the command
     system($inferexp) == 0
         or die "Failed to execute infer_experiment: $!";
+
+    # Construct the bam stat command
+    my $bamstat = "bam_stat.py -i $file > $bamstat_dir/${base}.bamstats.txt"; # Summarizing mapping statistics of a BAM or SAM file: bam_stat.py
+
+    # Execute the command
+    system($bamstat) == 0 
+        or die "Failed to execute bam_stat: $!";
+
+    # Construct the read distribution command
+    my $readdist = "read_distribution.py -i $file -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 > $readdist_dir/${base}.read_dist.txt"; # Calculate how mapped reads were distributed over genome feature (like CDS exon, 5’UTR exon, 3’ UTR exon, Intron, Intergenic regions): read_distribution.py
+
+    # Execute the command 
+    system($readdist) == 0 
+        or die "Failed to execute read_dist: $!";
+    
 }
+
+
+
+
+
+
+
