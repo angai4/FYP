@@ -13,6 +13,7 @@ my @files = glob("*Aligned.sortedByCoord.out.bam");
 
 my $total_count = 0;
 my $file_count = 0;
+my $average_count;
 
 foreach my $file (@files) {
 
@@ -24,24 +25,26 @@ foreach my $file (@files) {
         $total_count += int($count);
         $file_count++;
     } else {
-    print "Non-numeric count for file $file: $count\n";
+        print "Non-numeric count for file $file: $count\n";
     }
 }
 
 if ($file_count > 0) {
-    my $average_count = $total_count / $file_count:
+    $average_count = $total_count / $file_count;
     print "Average count of alignments: $average_count\n";
 } else {
     print "No files processed, unable to calculate average.\n";
+    exit; # If no files are processed, exit the script.
 }
 
-# practice to create a subsample with 100 reads -s = want / avg
-my $s = 100 / $average_count
+# Proceed with the subsampling only if average_count has been calculated.
+my $s = 100 / $average_count;
 foreach my $file (@files) {
 
     # Extracting the base name for the output file using substitution regular expression
     (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
 
-    system("samtools view -s $x -o ${base}Aligned.sortedByCoord.out_subset.bam $file");
+    # Make sure to interpolate the variable correctly in the command
+    system("samtools view -s $s -o ${base}Aligned.sortedByCoord.out_subset.bam $file");
     print "Successfully subsampled a proportion of aligned reads for $file\n";
-    }
+}
