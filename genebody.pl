@@ -33,7 +33,7 @@ if ($file_count > 0) {
     $average_count = $total_count / $file_count;
     print "Average count of alignments: $average_count\n";
     # Calculate subsampling fraction here, inside the conditional block
-    my $s = 100 / $average_count;
+    my $s = 200000 / $average_count;
 
     foreach my $file (@files) {
         (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
