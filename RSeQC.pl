@@ -57,6 +57,29 @@ foreach my $file (@files) {
     
 }
 
+# 
+chdir $inferexp_dir or die "Cannot change to directory $inferexp_dir: $!";
+print "Successfully changed to directory: $inferexp_dir\n"; 
+
+# Run MultiQC
+my $multiqc_inferexp = "multiqc $inferexp_dir -n rseqc_inferexperiment_multiqc";
+system($multiqc_inferexp) == 0
+    or die "Failed to execute MultiQC on $inferexp_dir: $!";
+
+# 
+chdir $readdist_dir or die "Cannot change to directory $readdist_dir: $!";
+print "Successfully changed to directory: $readdist_dir\n"; 
+
+# Run MultiQC
+my $multiqc_readdist = "multiqc $readdist_dir -n rseqc_readdistribtuion_multiqc";
+system($multiqc_readdist) == 0
+    or die "Failed to execute MultiQC on $readdist_dir: $!";
+
+#
+
+
+    
+
 
 
 
