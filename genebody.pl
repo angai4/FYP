@@ -15,9 +15,7 @@ my $total_count = 0;
 my $file_count = 0;
 
 foreach my $file (@files) {
-    # Extracting the base name for the output file using substitution regular expression
-    (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
-    
+
     my $count = `samtools view -c $file`;
     chomp $count;
     print "Count for file $file is: $count\n";
@@ -36,3 +34,14 @@ if ($file_count > 0) {
 } else {
     print "No files processed, unable to calculate average.\n";
 }
+
+# practice to create a subsample with 100 reads -s = want / avg
+my $s = 100 / $average_count
+foreach my $file (@files) {
+
+    # Extracting the base name for the output file using substitution regular expression
+    (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
+
+    system("samtools view -s $x -o ${base}Aligned.sortedByCoord.out_subset.bam $file");
+    print "Successfully subsampled a proportion of aligned reads for $file\n";
+    }
