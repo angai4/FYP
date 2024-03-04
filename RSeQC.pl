@@ -93,7 +93,7 @@ my @subsetfiles = glob("*Aligned.sortedByCoord.out_subset.bam");
 
 foreach my $file (@subsetfiles) {
     
-    my subset_count = `samtools view -c $file`;
+    my $subset_count = `samtools view -c $file`;
     chomp $subset_count;
     print "Number of alignments in $file is: $subset_count\n";
 }
