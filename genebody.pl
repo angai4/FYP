@@ -42,11 +42,13 @@ if ($file_count > 0) {
     }
 } else {
     print "No files processed, unable to calculate average.\n";
+    exit;
 }
 
 my @subsetfiles = glob("*Aligned.sortedByCoord.out_subset.bam");
 
 foreach my $file (@subsetfiles) {
+    
     my subset_count = `samtools view -c $file`;
     chomp $subset_count;
     print "Number of alignments in $file is: $subset_count\n";
