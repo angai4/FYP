@@ -30,6 +30,10 @@ print "Successfully changed to directory: $bam_path\n";
 # Getting all the files matching the pattern *Aligned.sortedByCoord.out.bam
 my @files = glob("*Aligned.sortedByCoord.out.bam");
 
+my $total_count = 0;
+my $file_count = 0;
+my $average_count;
+
 foreach my $file (@files) {
     # Extracting the base name for the output file using substitution regular expression
     (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
@@ -54,8 +58,54 @@ foreach my $file (@files) {
     # Execute the command 
     system($readdist) == 0 
         or die "Failed to execute read_dist: $!";
-    
+
+    # .......
+    my $count = `samtools view -c $file`;
+    chomp $count;
+    print "Count for file $file is: $count\n";
+
+    if ($count =~ /^\d+$/) {
+        $total_count += int($count);
+        $file_count++;
+    } else {
+        print "Non-numeric count for file $file: $count\n";
+    }
 }
+
+# ........
+if ($file_count > 0) {
+    $average_count = $total_count / $file_count;
+    print "Average count of alignments: $average_count\n";
+    # Calculate subsampling fraction here, inside the conditional block
+    my $s = 200000 / $average_count;
+
+    foreach my $file (@files) {
+        (my $base = $file) =~ s/Aligned\.sortedByCoord\.out\.bam//; # substitute the pattern found in between "/ / with nothing"
+        system("samtools view -s $s -o ${base}Aligned.sortedByCoord.out_subset.bam $file");
+        print "Successfully subsampled a proportion of aligned reads for $file\n";
+    }
+} else {
+    print "No files processed, unable to calculate average.\n";
+    exit;
+}
+
+my @subsetfiles = glob("*Aligned.sortedByCoord.out_subset.bam");
+
+foreach my $file (@subsetfiles) {
+    
+    my subset_count = `samtools view -c $file`;
+    chomp $subset_count;
+    print "Number of alignments in $file is: $subset_count\n";
+}
+
+# Change to relevant directory to perform MultiQC
+chdir $genebody_dir or die "Cannot change to directory $genebody_dir: $!";
+print "Successfully changed to directory: $genebody_dir\n"; 
+
+# Run MultiQC
+my $multiqc_genebody = "multiqc $genebody_dir -n rseqc_genebodycoverage_multiqc";
+system($multiqc_genebody) == 0
+    or die "Failed to execute MultiQC on $genebody_dir: $!";
 
 # Change to relevant directory to perform MultiQC
 chdir $inferexp_dir or die "Cannot change to directory $inferexp_dir: $!";
@@ -75,7 +125,6 @@ my $multiqc_readdist = "multiqc $readdist_dir -n rseqc_readdistribtuion_multiqc"
 system($multiqc_readdist) == 0
     or die "Failed to execute MultiQC on $readdist_dir: $!";
 
-# Change to relevant directory to perform MultiQC
 
 
     
