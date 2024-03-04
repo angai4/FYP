@@ -92,10 +92,16 @@ if ($file_count > 0) {
 my @subsetfiles = glob("*Aligned.sortedByCoord.out_subset.bam");
 
 foreach my $file (@subsetfiles) {
-    
+
+    (my $subset_base = $file) =~ s/Aligned\.sortedByCoord\.out_subset\.bam//; # substitute the pattern found in between "/ / with nothing"
     my $subset_count = `samtools view -c $file`;
     chomp $subset_count;
     print "Number of alignments in $file is: $subset_count\n";
+
+    # Construct the gene body coverage command
+    my $genebody = "geneBody_coverage.py -i $file -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -o $genebody_dir/${subset_base}";
+    system($genebody) == 0 
+        or die "Failed to execute genebpdy_coverage: $!";
 }
 
 # Change to relevant directory to perform MultiQC
