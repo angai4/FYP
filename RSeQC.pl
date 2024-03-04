@@ -99,13 +99,13 @@ foreach my $file (@subsetfiles) {
     print "Number of alignments in $file is: $subset_count\n";
 
     # index subsampled BAM files
-    system("samtools index $file -@ 12")
+    system("samtools index $file")
         or die "Failed to index subsampled BAM files\n";
     
     # Construct the gene body coverage command
     my $genebody = "geneBody_coverage.py -i $file -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -o $genebody_dir/${subset_base}";
     system($genebody) == 0 
-        or die "Failed to execute genebpdy_coverage: $!";
+        or die "Failed to execute genebody_coverage: $!";
 }
 
 # Change to relevant directory to perform MultiQC
