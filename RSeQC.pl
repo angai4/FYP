@@ -98,9 +98,12 @@ foreach my $file (@subsetfiles) {
     chomp $subset_count;
     print "Number of alignments in $file is: $subset_count\n";
 
-    # index subsampled BAM files
-    system("samtools index $file")
-        or die "Failed to index subsampled BAM files\n";
+    # Construct the index command 
+    my $subsample_index = "samtools index $file";
+    
+    # Execute the command 
+    system($subsample_index) == 0 
+        or die "Failed to index $file: $!\n";
     
     # Construct the gene body coverage command
     my $genebody = "geneBody_coverage.py -i $file -r /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.bed12 -o $genebody_dir/${subset_base}";
