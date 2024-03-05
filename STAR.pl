@@ -46,7 +46,7 @@ foreach my $file (@fastq_files) {
     # Extracting the base name using substitution regular expression
     (my $base = $file) =~ s/_1\.fastq\.gz//; # substitute the pattern found in between / / with nothing
 
-    # Constructing the STAR command
+    # Constructing the STAR command - note: $refgenome_path/x (x = your reference genome file), and sjdbOverhang y (y = maximum read length - 1)
 
     my $STAR = "STAR --genomeDir $star_path --runThreadN 12 --readFilesIn ${base}_1.fastq.gz ${base}_2.fastq.gz --readFilesCommand zcat --outFileNamePrefix $output_path/${base} --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outSAMattributes Standard --sjdbGTFfile $refgenome_path/hg38.ncbiRefSeq.gtf --sjdbOverhang 49";
 
