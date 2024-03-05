@@ -2,16 +2,18 @@
 
 use strict;
 use warnings;
+use File::Path 'make_path';
 
 # Define the directory you want to change to (make the directories first??)
-my $directory = "/media/newdrive/GCB2024/aaronngai/automation/raw_fastq";  # alternative approach - my $home = <STDIN> , the user can then input the address of their home directory
-my $fastqc_output_dir = "/media/newdrive/GCB2024/aaronngai/automation/raw_fastq/FastQ\
-C";
+my $fastq_dir = "$ENV{HOME}/automation/raw_fastq";  
+my $fastqc_output_dir = "$ENV{HOME}/automation/raw_fastq/FastQC";
+
+makepath($fastqc_output_dir);
 
 # Change to the specified directory
-chdir $directory or die "Cannot change to directory $directory: $!";
+chdir $fastq_dir or die "Cannot change to directory $fastq_dir: $!";
 
-print "Successfully changed to directory: $directory\n";
+print "Successfully changed to directory: $fastq_dir\n";
 
 # Get a list of FASTQ files
 my @fastq_files = glob("*.fastq.gz"); # maybe use grep
