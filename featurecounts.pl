@@ -16,6 +16,7 @@ my $bam_dir = "$ENV{HOME}/automation/coordinate_sorted_bams";
 
 # Change to directories with the BAM files
 chdir $bam_dir or die "Cannot change to directory $bam_dir: $!";
+print "Successfully changed directory: $bam_dir\n";
 
 # Create name-sorted bam file
 
@@ -33,5 +34,16 @@ foreach my $file (@files) {
   system($samtools) == 0 
     or die "Failed to execute $samtools: $!";
 }
+
+# Change directory
+chdir $name_sorted_bams_dir or die "Cannot change to directory $name_sorted_bams_dir: $!";
+print "Successfully changed directory: $name_sorted_bams_dir\n";
+
+# Construct featureCounts command for reverse-stranded libraries - note -a will need to be edited to the path of your reference genome
+my $featurecounts = "featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/newdrive/data/Reference_genomes/Human/UCSC/hg38.ncbiRefSeq.gtf -o $counts_dir/featurecounts.txt *namesorted.bam 2> ~/FYP/counts/featurecounts.screen-output.log";
+
+system($featurecounts) == 0 
+ or die "Failed to execute $featurecounts: $!";
+
 
 
