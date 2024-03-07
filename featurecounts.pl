@@ -34,6 +34,7 @@ foreach my $file (@files) {
   system($samtools) == 0 
     or die "Failed to execute $samtools: $!";
 }
+print "Successfully name sorted bam files\n";
 
 # Change directory
 chdir $name_sorted_bams_dir or die "Cannot change to directory $name_sorted_bams_dir: $!";
@@ -44,6 +45,16 @@ my $featurecounts = "featureCounts -T 12 -s 2 -p --countReadPairs -C -a /media/n
 
 system($featurecounts) == 0 
  or die "Failed to execute $featurecounts: $!";
+
+# Change directory
+chdir $counts_dir or die "Cannot change to directory $counts_dir: $!";
+print "Successfully changed directory: $counts_dir\n";
+
+# Run MultiQC
+my $multiqc = "multiqc $counts_dir -n featurecounts_multiqc";
+system($multiqc) == 0
+    or die "Failed to execute MultiQC on $counts_dir: $!";
+print "MultiQC report generated in $counts_dir\n";
 
 
 
