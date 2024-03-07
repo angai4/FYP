@@ -7,8 +7,8 @@ use File::Path 'make_path';
 my $name_sorted_bams_dir = "$ENV{HOME}/automation/name_sorted_bams";
 my $counts_dir = "$ENV{HOME}/automation/counts";
 
-make_path($name_sorted_bams_dir)
-make_path($counts_dir)
+make_path($name_sorted_bams_dir);
+make_path($counts_dir);
 print "Successfully created the following directories: $name_sorted_bams_dir and $counts_dir\n";
 
 # Define the directory with the BAM files 
@@ -32,6 +32,6 @@ foreach my $file (@files) {
   # Execute the command 
   system($samtools) == 0 
     or die "Failed to execute $samtools: $!";
-
+}
 
 
