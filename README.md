@@ -38,8 +38,7 @@ After installation and setup, you can start using the scripts as follows:
    ./cutadapt.pl
 
 3. **Aligning Sequences with STAR**:
-   This script processes the RNA sequences using the STAR aligner to map reads to the reference genome. Ensure that the reference genome is correctly configured in your   
- script settings before running.
+   This script processes the RNA sequences using the STAR aligner to map reads to the reference genome. Ensure that the reference genome is correctly configured in your script settings before running.
    ```bash
    ./STAR.pl
 
