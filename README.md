@@ -38,22 +38,22 @@ After installation and setup, you can start using the scripts as follows:
    ./cutadapt.pl
 
 3. **Aligning Sequences with STAR**:
-   This script processes the RNA sequences using the STAR aligner to map reads to the reference genome. Ensure that the reference genome is correctly configured in your script settings before running.
+   This script processes the RNA sequences using the STAR aligner to map reads to the reference genome. Ensure that the reference genome and sjdbOverhang (maximum read length - 1) are correctly configured in your script settings before running. Note - <path_to_STAR_dir> = ~/automation/coordinate_sorted_bams and <path_to_output_dir> = ~/automation/coordinate_sorted_bams . 
    ```bash
-   ./STAR.pl
+   ./STAR.pl <path_to_STAR_dir> <path_to_refgenome_dir> <path_to_fastq_dir> <path_to_output_dir>
 
 4. **Indexing BAM Files**:
-   Post-alignment, this script indexes the generated BAM files to facilitate quicker data access in downstream analyses.
+   Post-alignment, this script indexes the generated BAM files to facilitate quicker data access in downstream analyses. Note <path_to_bam_dir> = ~/automation/coordinate_sorted_bams . 
    ```bash
-   ./indexbam.pl
+   ./indexbam.pl <path_to_bam_dir>
 
 5. **Quality Control with RSEQC**:
-   To assess the quality of the RNA-seq data and ensure the integrity of the sequencing process
+   To assess the quality of the RNA-seq data and ensure the integrity of the sequencing process. Ensure that the reference genome is correctly configured in your script settings before running.
    ```bash
    ./RSEQC.pl
 
 6. **Counting Reads Asscoiated with Genes with FeatureCounts**:
-   The final script in the pipeline counts the gene features from the aligned reads.
+   The final script in the pipeline counts the gene features from the aligned reads. Ensure that the reference genome is correctly configured in your script settings before running. By default this assumes a reverse-stranded library, if this is not the case adjust the parameters in the script settings. 
    ```bash
    ./featurecounts.pl
 
