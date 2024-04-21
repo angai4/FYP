@@ -11,7 +11,7 @@ This repository, BRAS (Bulk RNA-seq Automation Scripts), offers a suite of scrip
 ## Prerequisites
 Ensure you have a Linux environment with permissions to install and execute scripts. You will need tools like `emacs`, `chmod`, and necessary dependencies for running Perl scripts.
 
-## Running Scripts
+## Installation
 Execute the scripts in the following order:
 - **`create_initial_directories.pl`**
 - **`cutadapt.pl`** (optional, skip if trimming is not required)
@@ -24,7 +24,7 @@ Execute the scripts in the following order:
 
 To ensure optimal functionality and results from the BRAS scripts, it is crucial to execute the scripts in the specific order outlined in the Installation section. Below are step-by-step instructions and examples to guide you through using each script effectively.
 
-### The Pipeline
+### Running the Scripts
 After installation and setup, you can start using the scripts as follows:
 
 1. **Create Initial Directories**:
