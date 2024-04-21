@@ -10,7 +10,7 @@ es
 make_path($dir);
 
 # Define the directory you want to change to
-my $directory = "/media/newdrive/GCB2024/aaronngai/automation/raw_fastq";
+my $directory = "$ENV{HOME}/automation/raw_fastq";
 
 # Change to the specified directory
 chdir $directory or die "Cannot change to directory $directory: $!";
