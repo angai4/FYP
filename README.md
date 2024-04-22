@@ -28,7 +28,7 @@ To ensure optimal functionality and results from the BRAS scripts, it is crucial
 After installation and setup, you can start using the scripts as follows:
 
 1. **Create Initial Directories**:
-   This script sets up the necessary directory structure required for the subsequent scripts to function correctly.
+   This script sets up the necessary directory structure required for the subsequent scripts to function correctly. All Fastq files must be imported manually into the newly created ~/automation/raw_fastq directory
    ```bash
    ./create_initial_directories.pl
 
